@@ -188,14 +188,25 @@ export function useQuiz() {
     });
   };
 
+  const loadQuizFromHistory = (historyItem: QuizHistory) => {
+    setQuiz(historyItem.quiz);
+    console.log(historyItem);
+
+    setCurrentQuizId(historyItem.id);
+    toast("Quiz loaded", {
+      description: `Loaded "${historyItem.title}" from history`,
+    });
+  };
+
   return {
     quiz,
     setQuiz,
     currentQuizId,
     setCurrentQuizId,
+    loading,
     generateQuiz,
     resetQuiz,
     onQuizComplete,
-    loading,
+    loadQuizFromHistory,
   };
 }
