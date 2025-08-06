@@ -14,3 +14,13 @@ export type QuizData = {
     truncated: boolean;
   };
 };
+
+export type QuizHistory = {
+  id: string;
+  title: string;
+  fileName: string;
+  createdAt: string;
+  score?: number;
+  totalQuestions: number;
+  quiz: QuizData;
+};
