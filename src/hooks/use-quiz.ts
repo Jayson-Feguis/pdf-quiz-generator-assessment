@@ -5,6 +5,7 @@ import { toast } from "sonner";
 export function useQuiz() {
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [currentQuizId, setCurrentQuizId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const generateQuiz = async (file: File | null) => {
     if (!file) {
@@ -22,6 +23,7 @@ export function useQuiz() {
     });
 
     try {
+      setLoading(true);
       console.log("Creating FormData...");
       const formData = new FormData();
       formData.append("pdf", file);
@@ -154,8 +156,23 @@ export function useQuiz() {
         description: errorMessage,
       });
     } finally {
+      setLoading(false);
       console.log("=== Quiz Generation Process Finished ===");
     }
+  };
+
+  const resetQuiz = () => {
+    setQuiz(null);
+    setCurrentQuizId(null);
+  };
+
+  const onQuizComplete = (score: number) => {
+    const percentage = Math.round((score / quiz!.questions.length) * 100);
+    toast("Quiz completed!", {
+      description: `You scored ${score}/${
+        quiz!.questions.length
+      } (${percentage}%)`,
+    });
   };
 
   return {
@@ -164,5 +181,8 @@ export function useQuiz() {
     currentQuizId,
     setCurrentQuizId,
     generateQuiz,
+    resetQuiz,
+    onQuizComplete,
+    loading,
   };
 }
