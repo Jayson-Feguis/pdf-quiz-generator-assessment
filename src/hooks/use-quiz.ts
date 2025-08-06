@@ -1,8 +1,10 @@
-import { QuizData } from "@/types/quiz.type";
+import { useQuizStore } from "@/lib/zustand";
+import { QuizData, QuizHistory } from "@/types/quiz.type";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export function useQuiz() {
+  const { addQuizHistory, updateQuizScore } = useQuizStore();
   const [quiz, setQuiz] = useState<QuizData | null>(null);
   const [currentQuizId, setCurrentQuizId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -126,7 +128,16 @@ export function useQuiz() {
       }
 
       const quizId = Date.now().toString();
+      const historyEntry: QuizHistory = {
+        id: quizId,
+        title: quizData.title,
+        fileName: file.name,
+        createdAt: new Date().toISOString(),
+        totalQuestions: quizData.questions.length,
+        quiz: quizData,
+      };
 
+      addQuizHistory(historyEntry);
       setQuiz(quizData);
       setCurrentQuizId(quizId);
 
@@ -167,6 +178,8 @@ export function useQuiz() {
   };
 
   const onQuizComplete = (score: number) => {
+    if (currentQuizId) updateQuizScore(currentQuizId, score);
+
     const percentage = Math.round((score / quiz!.questions.length) * 100);
     toast("Quiz completed!", {
       description: `You scored ${score}/${
@@ -175,14 +188,25 @@ export function useQuiz() {
     });
   };
 
+  const loadQuizFromHistory = (historyItem: QuizHistory) => {
+    setQuiz(historyItem.quiz);
+    console.log(historyItem);
+
+    setCurrentQuizId(historyItem.id);
+    toast("Quiz loaded", {
+      description: `Loaded "${historyItem.title}" from history`,
+    });
+  };
+
   return {
     quiz,
     setQuiz,
     currentQuizId,
     setCurrentQuizId,
+    loading,
     generateQuiz,
     resetQuiz,
     onQuizComplete,
-    loading,
+    loadQuizFromHistory,
   };
 }
