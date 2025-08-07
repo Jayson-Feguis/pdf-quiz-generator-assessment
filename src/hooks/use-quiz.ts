@@ -1,3 +1,4 @@
+import { MAX_API_CALL_TIMEOUT } from "@/lib/constants";
 import { useQuizStore } from "@/lib/zustand";
 import { QuizData, QuizHistory } from "@/types/quiz.type";
 import { useState } from "react";
@@ -33,7 +34,10 @@ export function useQuiz() {
       console.log("Making API request to /api/generate-quiz...");
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        MAX_API_CALL_TIMEOUT
+      ); // 5 mins timeout
 
       const response = await fetch("/api/generate-quiz", {
         method: "POST",
