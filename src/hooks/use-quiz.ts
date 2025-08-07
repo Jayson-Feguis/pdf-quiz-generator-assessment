@@ -12,16 +12,13 @@ export function useQuiz() {
 
   const generateQuiz = async (file: File | null) => {
     if (!file) {
-      toast("No file selected", {
+      toast.error("No file selected", {
         description: "Please select a PDF file first",
       });
       return;
     }
 
-    console.log("=== Starting Quiz Generation ===");
-    console.log("File:", file.name, "Size:", file.size, "Type:", file.type);
-
-    toast("Processing PDF", {
+    toast.loading("Processing PDF", {
       description: "Extracting text and generating quiz questions...",
     });
 
@@ -140,12 +137,13 @@ export function useQuiz() {
         totalQuestions: quizData.questions.length,
         quiz: quizData,
       };
+      toast.dismiss();
 
       addQuizHistory(historyEntry);
       setQuiz(quizData);
       setCurrentQuizId(quizId);
 
-      toast("Quiz generated successfully!", {
+      toast.success("Quiz generated successfully!", {
         description: `Created ${quizData.questions.length} questions from ${
           quizData.metadata?.pageCount || "your"
         } pages`,
@@ -167,7 +165,7 @@ export function useQuiz() {
         }
       }
 
-      toast("Quiz generation failed", {
+      toast.error("Quiz generation failed", {
         description: errorMessage,
       });
     } finally {
@@ -185,7 +183,7 @@ export function useQuiz() {
     if (currentQuizId) updateQuizScore(currentQuizId, score);
 
     const percentage = Math.round((score / quiz!.questions.length) * 100);
-    toast("Quiz completed!", {
+    toast.success("Quiz completed!", {
       description: `You scored ${score}/${
         quiz!.questions.length
       } (${percentage}%)`,
@@ -197,7 +195,7 @@ export function useQuiz() {
     console.log(historyItem);
 
     setCurrentQuizId(historyItem.id);
-    toast("Quiz loaded", {
+    toast.success("Quiz loaded", {
       description: `Loaded "${historyItem.title}" from history`,
     });
   };

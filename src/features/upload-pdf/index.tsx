@@ -28,11 +28,11 @@ export function UploadPDF({ file, setFile, generateQuiz, loading }: Props) {
     const selectedFile = e.target.files?.[0];
     if (selectedFile && selectedFile.type === "application/pdf") {
       setFile(selectedFile);
-      toast("File selected", {
+      toast.success("File selected", {
         description: `${selectedFile.name} is ready for processing`,
       });
     } else {
-      toast("Invalid file", {
+      toast.error("Invalid file", {
         description: "Please select a valid PDF file",
       });
       setFile(null);
@@ -73,9 +73,20 @@ export function UploadPDF({ file, setFile, generateQuiz, loading }: Props) {
             <div className="space-y-4">
               <Label
                 htmlFor="upload"
-                className="text-base font-medium text-zinc-200"
+                className={cn(
+                  "h-20 text-base border-2 border-dashed text-zinc-300 border-zinc-700 hover:border-zinc-200 transition-all flex justify-center hover:cursor-pointer",
+                  file &&
+                    "group-hover:opacity-50 duration-500 delay-100 group-hover:cursor-pointer"
+                )}
               >
-                Choose PDF File
+                {file ? (
+                  <div className="flex items-center justify-center text-green-600 w-full group-hover:cursor-pointer">
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    <span className="text-sm font-medium">{file.name}</span>
+                  </div>
+                ) : (
+                  "Choose PDF File or Drag Here"
+                )}
               </Label>
               <div className="relative group">
                 <Input
@@ -83,18 +94,8 @@ export function UploadPDF({ file, setFile, generateQuiz, loading }: Props) {
                   type="file"
                   accept="application/pdf"
                   onChange={handleFileChange}
-                  className={cn(
-                    "h-20 text-base border-2 border-dashed text-zinc-300 border-zinc-700 hover:border-zinc-200 transition-all",
-                    file &&
-                      "group-hover:opacity-50 duration-500 delay-100 group-hover:cursor-pointer"
-                  )}
+                  hidden
                 />
-                {file && (
-                  <div className="absolute left-1/2 bottom-3 -translate-x-1/2 transform flex items-center justify-center text-green-600 w-full group-hover:cursor-pointer">
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    <span className="text-sm font-medium">{file.name}</span>
-                  </div>
-                )}
               </div>
             </div>
 

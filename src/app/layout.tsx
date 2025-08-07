@@ -24,7 +24,20 @@ export default function RootLayout({
           </div>
           {children}
         </div>
-        <Toaster closeButton />
+        <Toaster
+          toastOptions={{
+            classNames: {
+              toast: "!border-0",
+              error: "!bg-red-500",
+              success: "!bg-emerald-700",
+              loading: "!bg-purple-900",
+              info: "!bg-blue-700",
+              icon: "!text-zinc-100",
+              title: "!text-zinc-200",
+              description: "!text-zinc-300",
+            },
+          }}
+        />
       </body>
     </html>
   );
