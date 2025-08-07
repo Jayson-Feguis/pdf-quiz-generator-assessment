@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import quizHistorySlice, {
   type QuizHistorySlice,
-} from "@/lib/zustand/slices/quiz-history";
+} from "@/lib/zustand/slices/quiz-history-slice";
 
 export type Store = QuizHistorySlice;
 

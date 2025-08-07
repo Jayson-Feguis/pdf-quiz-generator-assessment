@@ -1,5 +1,6 @@
 import { MAX_QUIZ_HISTORY_COUNT } from "@/lib/constants";
 import { QuizHistory } from "@/types/quiz.type";
+import { toast } from "sonner";
 import { StateCreator } from "zustand";
 
 export type QuizHistorySlice = {
@@ -21,10 +22,14 @@ const quizHistorySlice: StateCreator<QuizHistorySlice> = (set) => ({
       return { quizHistory: newHistory };
     }),
 
-  deleteQuizHistory: (id) =>
-    set((state) => ({
+  deleteQuizHistory: (id) => {
+    toast.success("Quiz Deleted", {
+      description: "Quiz has been deleted successfully",
+    });
+    return set((state) => ({
       quizHistory: state.quizHistory.filter((item) => item.id !== id),
-    })),
+    }));
+  },
 
   updateQuizScore: (id, score) =>
     set((state) => ({
