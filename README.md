@@ -1,47 +1,123 @@
-# PDF Quiz Generator - Take-Home Assignment
+# PDF Quiz Generator
 
-## Challenge Overview
-Create a simple web application that allows users to upload PDF documents and generate a quiz based on the content using OpenAI.
+A web application that allows users to upload a PDF file and generate a multiple-choice quiz from its content using the power of AI.
+
+---
+
+## Features
+
+- **AI-Generated Quizzes**
+  - Extracts content from PDF using `pdf-parse-new`, then generates smart quiz questions via the OpenAI API.
+- **Chunk-Based PDF Support**
+  - Handles large PDF files by processing them in chunks to ensure smooth performance.
+- **Quiz History**
+  - Saves quiz attempts in `localStorage` using Zustand.
+  - Users can view past quizzes, **retake**, or **delete** them.
+- **Interactive Quiz Flow**
+  - Users choose answers for each question.
+  - Upon completion, results are displayed with correct vs incorrect answers and a final score.
+- **Scalable Architecture**
+- Follows **feature-based folder structure** for better maintainability and scalability.
+
+---
 
 ## Tech Stack
-This starter project uses Next.js with Tailwind CSS and Shadcn UI components.
 
-## Core Requirements
+- [Next.js](https://nextjs.org/) – App framework for server-side rendering and routing
+- [Tailwind CSS](https://tailwindcss.com/) – Utility-first CSS framework
+- [Shadcn/UI](https://ui.shadcn.com/) – Accessible and beautiful UI components
+- [Zustand](https://github.com/pmndrs/zustand) – Lightweight global state management
+- [PDF Parse New](https://www.npmjs.com/package/pdf-parse-new) – For extracting text from PDF files
+- [OpenAI API](https://platform.openai.com/docs) – For generating quiz questions using AI
+- [Sonner](https://sonner.emilkowal.ski/) – Toast notification system
 
-### Minimum Viable Product
-- Upload interface for PDF documents (limit to small files, <10 pages)
-- Generate 5 multiple-choice questions using OpenAI based on PDF content
-- Allow users to answer questions and see their score
+---
 
-### Stretch Goals (if time permits)
-- Support for larger documents
-- Short-answer question types
-- Improved error handling
-- Enhanced visual design
+## Installation
 
-## Implementation Guidelines
-- Focus on creating a working prototype rather than a polished product
-- Use the OpenAI API efficiently (consider extracting key sections rather than sending the entire document)
-- Basic error handling for common cases (invalid PDFs, API failures)
-- Keep the UI simple and functional
+```bash
+git  clone  https://github.com/your-username/pdf-quiz-generator.git
 
-## Resources
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Shadcn UI Documentation](https://ui.shadcn.com)
-- [OpenAI API Documentation](https://platform.openai.com/docs/api-reference)
-- [PDF.js Library](https://mozilla.github.io/pdf.js/) (suggestion for PDF processing)
+cd  pdf-quiz-generator
 
-## Evaluation Criteria
-- Functional completeness of the core features
-- Code organization and clarity
-- Thoughtful API integration
-- Basic user experience considerations
+npm  install
+```
 
-## Timeline
-- Expected completion: 2-3 hours of focused development
-- Deadline: Within 5 days of receiving this assignment
+➤ Set up environment variables
 
-This assignment is designed to demonstrate your approach to problem-solving and integration rather than creating a production-ready application. We're interested in seeing your programming style and how you tackle the essential requirements within the time constraint.
+Create a .env.local file and add:
 
-Good luck! We're excited to see your implementation.
+.env
+
+```bash
+OPENAI_API_KEY=your-open-api-key
+
+OPENAI_MODEL=your-openai-model
+
+MAX_QUIZ_HISTORY_COUNT=your-max-quiz-history-count
+
+QUESTIONS_COUNT=your-questions-count
+
+MAX_FILE_SIZE=your-max-file-size
+
+MAX_API_CALL_TIMEOUT=your-max-api-call-timeout
+```
+
+- Important: Make sure not to commit this file.
+
+---
+
+## Running the App
+
+```bash
+npm  run  dev
+```
+
+Then open your browser at http://localhost:3000.
+
+## Folder Structure (Feature-Based)
+
+```bash
+src/
+├──  app/
+├──  components/
+├──  features/
+│  ├──  upload-pdf/
+│  ├──  quiz/
+│  ├──  quiz-history/
+├──  hooks/
+├──  lib/
+│  ├──  schema/
+│  ├──  utils/
+│  ├──  zustand/
+│  ├──  constants/
+└──  types/
+```
+
+## Additional Libraries or Tools
+
+- pdf-parse-new – Text extraction from PDF files
+- openai – For generating quiz questions
+- zustand – For state management
+- sonner – For toast notifications
+- shadcn/ui – UI component library
+- tailwindcss – Styling framework
+
+---
+
+## Brief Explanation of Approach and Design Decisions
+
+- Used a feature-based folder structure to keep logic modular and scalable
+- State is kept minimal and persisted in localStorage via Zustand
+- Large PDFs are processed in chunks to avoid performance issues and API limits
+- Quiz generation is asynchronous and error-resilient
+- All components use functional React and modern hooks
+
+---
+
+## Known Limitations or Areas for Improvement
+
+- No user authentication or cloud-based history storage
+- Minimal error handling for scanned/invalid PDFs
+- No handling for OpenAI rate limits or token overflow
+- No quiz export or print feature

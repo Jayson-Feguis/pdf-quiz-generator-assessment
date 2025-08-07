@@ -3,7 +3,12 @@ import { openai } from "@ai-sdk/openai";
 import pdfParse from "pdf-parse-new";
 import _ from "lodash";
 import { chunkText } from "@/lib/utils/chunk-text";
-import { CHUNKS, MAX_FILE_SIZE, QUESTIONS_COUNT } from "@/lib/constants";
+import {
+  CHUNKS,
+  MAX_FILE_SIZE,
+  OPENAI_MODEL,
+  QUESTIONS_COUNT,
+} from "@/lib/constants";
 import { QuizSchema } from "@/lib/schemas/quiz.schema";
 
 export async function generateQuizFromPdf(file: File) {
@@ -12,7 +17,7 @@ export async function generateQuizFromPdf(file: File) {
   if (file.type !== "application/pdf")
     throw new Error("Invalid file type. Please upload PDF only");
 
-  if (file.size > MAX_FILE_SIZE)
+  if (file.size > +MAX_FILE_SIZE)
     throw new Error(`File size exceeds the ${MAX_FILE_SIZE}MB limit.`);
 
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -28,7 +33,7 @@ export async function generateQuizFromPdf(file: File) {
   // Smart chunking based on total text length and desired question count
   const chunks =
     text.length < CHUNKS.LARGE && text.length >= CHUNKS.MEDIUM
-      ? chunkText(text, Math.ceil(text.length / QUESTIONS_COUNT))
+      ? chunkText(text, Math.ceil(text.length / +QUESTIONS_COUNT))
       : [text];
   const quizzes = [];
 
@@ -43,8 +48,9 @@ export async function generateQuizFromPdf(file: File) {
       Text:
       ${chunk}`.trim();
 
+    console.log(OPENAI_MODEL);
     const result = await generateObject({
-      model: openai("gpt-4o"),
+      model: openai(OPENAI_MODEL),
       messages: [
         {
           role: "user",
@@ -61,7 +67,7 @@ export async function generateQuizFromPdf(file: File) {
   const allQuestions = quizzes.flatMap((q) => q.questions);
   const mergedQuiz = {
     title: quizzes[0]?.title || "Generated Quiz",
-    questions: _.shuffle(allQuestions).slice(0, QUESTIONS_COUNT),
+    questions: _.shuffle(allQuestions).slice(0, +QUESTIONS_COUNT),
   };
 
   return {

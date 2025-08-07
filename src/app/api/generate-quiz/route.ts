@@ -1,6 +1,17 @@
 import { NextRequest } from "next/server";
 import { generateQuizFromPdf } from "@/lib/utils/generate-quiz-from-pdf";
 
+/**
+ * Handles a POST request to generate a quiz from a PDF file.
+ *
+ * @param {NextRequest} request - The incoming request object from Next.js API route.
+ * @returns {Promise<Response>} - A JSON response containing the generated quiz or an error message.
+ *
+ * @throws {Error} If the OpenAI API key is missing or if any step in the quiz generation fails.
+ *
+ * @example
+ * // Request should be a multipart/form-data with a 'pdf' field containing the PDF file.
+ */
 export async function POST(request: NextRequest) {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
