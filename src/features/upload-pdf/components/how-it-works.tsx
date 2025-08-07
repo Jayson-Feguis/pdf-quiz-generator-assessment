@@ -1,4 +1,4 @@
-import { QUESTIONS_COUNT } from "@/lib/constants";
+"use client";
 import { Brain } from "lucide-react";
 
 const HOW_IT_WORKS = [
@@ -15,7 +15,7 @@ const HOW_IT_WORKS = [
   {
     id: 3,
     title: "Generate Quiz",
-    description: `Create ${QUESTIONS_COUNT} smart questions`,
+    description: `Create smart questions`,
   },
   {
     id: 4,

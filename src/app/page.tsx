@@ -18,36 +18,35 @@ export default function Home() {
   const [file, setFile] = useState<File | null>(null);
 
   return (
-    
-      <div
-        className={cn(
-          "relative z-10 flex min-h-screen",
-          quiz && "justify-center"
-        )}
-      >
-        {quiz ? (
-          <Quiz
-            quiz={quiz}
-            onReset={() => {
-              resetQuiz();
-              setFile(null);
-            }}
-            onComplete={(score: number) => {
-              onQuizComplete(score);
-              setFile(null);
-            }}
+    <div
+      className={cn(
+        "relative z-10 flex min-h-screen",
+        quiz && "justify-center"
+      )}
+    >
+      {quiz ? (
+        <Quiz
+          quiz={quiz}
+          onReset={() => {
+            resetQuiz();
+            setFile(null);
+          }}
+          onComplete={(score: number) => {
+            onQuizComplete(score);
+            setFile(null);
+          }}
+        />
+      ) : (
+        <>
+          <QuizHistory loadQuizFromHistory={loadQuizFromHistory} />
+          <UploadPDF
+            file={file}
+            setFile={setFile}
+            generateQuiz={generateQuiz}
+            loading={loading}
           />
-        ) : (
-          <>
-            <QuizHistory loadQuizFromHistory={loadQuizFromHistory} />
-            <UploadPDF
-              file={file}
-              setFile={setFile}
-              generateQuiz={generateQuiz}
-              loading={loading}
-            />
-          </>
-        )}
-      </div>
+        </>
+      )}
+    </div>
   );
 }

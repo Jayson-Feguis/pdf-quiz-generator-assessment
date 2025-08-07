@@ -12,5 +12,5 @@ export const QuizSchema = z.object({
         explanation: z.string(),
       })
     )
-    .length(QUESTIONS_COUNT),
+    .length(+QUESTIONS_COUNT),
 });

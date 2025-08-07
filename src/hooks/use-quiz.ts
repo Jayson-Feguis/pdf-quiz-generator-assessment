@@ -10,6 +10,12 @@ export function useQuiz() {
   const [currentQuizId, setCurrentQuizId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Generates a quiz from a provided PDF file by calling the `/api/generate-quiz` endpoint.
+   *
+   * @param {File | null} file - The PDF file to generate the quiz from.
+   * @returns {Promise<void>}
+   */
   const generateQuiz = async (file: File | null) => {
     if (!file) {
       toast.error("No file selected", {
@@ -18,22 +24,20 @@ export function useQuiz() {
       return;
     }
 
-    toast.loading("Processing PDF", {
+    const loadingToast = toast.loading("Processing PDF", {
       description: "Extracting text and generating quiz questions...",
     });
 
     try {
       setLoading(true);
-      console.log("Creating FormData...");
+
       const formData = new FormData();
       formData.append("pdf", file);
-
-      console.log("Making API request to /api/generate-quiz...");
 
       const controller = new AbortController();
       const timeoutId = setTimeout(
         () => controller.abort(),
-        MAX_API_CALL_TIMEOUT
+        +MAX_API_CALL_TIMEOUT
       ); // 5 mins timeout
 
       const response = await fetch("/api/generate-quiz", {
@@ -62,12 +66,9 @@ export function useQuiz() {
         "Raw response text (first 500 chars):",
         responseText.substring(0, 500)
       );
-      console.log("Response text length:", responseText.length);
 
       // Handle different response scenarios
       if (!response.ok) {
-        console.error("Response not OK, status:", response.status);
-
         let errorMessage = `Server error (${response.status})`;
 
         // Try to extract error from response
@@ -105,14 +106,8 @@ export function useQuiz() {
       let quizData;
       try {
         quizData = JSON.parse(responseText);
-        console.log("Successfully parsed quiz data:", {
-          title: quizData.title,
-          questionCount: quizData.questions?.length,
-          hasMetadata: !!quizData.metadata,
-        });
       } catch (parseError) {
         console.error("Failed to parse response as JSON:", parseError);
-        console.log("Response that failed to parse:", responseText);
         throw new Error(
           "Server returned invalid response format. Please try again."
         );
@@ -123,10 +118,8 @@ export function useQuiz() {
         !quizData.title ||
         !quizData.questions ||
         !Array.isArray(quizData.questions)
-      ) {
-        console.error("Invalid quiz data structure:", quizData);
+      )
         throw new Error("Invalid quiz data received from server");
-      }
 
       const quizId = Date.now().toString();
       const historyEntry: QuizHistory = {
@@ -137,7 +130,6 @@ export function useQuiz() {
         totalQuestions: quizData.questions.length,
         quiz: quizData,
       };
-      toast.dismiss();
 
       addQuizHistory(historyEntry);
       setQuiz(quizData);
@@ -148,10 +140,7 @@ export function useQuiz() {
           quizData.metadata?.pageCount || "your"
         } pages`,
       });
-
-      console.log("=== Quiz Generation Completed Successfully ===");
     } catch (err) {
-      console.error("=== Quiz Generation Failed ===");
       console.error("Error:", err);
 
       let errorMessage = "Failed to generate quiz. Please try again.";
@@ -170,7 +159,7 @@ export function useQuiz() {
       });
     } finally {
       setLoading(false);
-      console.log("=== Quiz Generation Process Finished ===");
+      toast.dismiss(loadingToast);
     }
   };
 
@@ -179,6 +168,11 @@ export function useQuiz() {
     setCurrentQuizId(null);
   };
 
+  /**
+   * Called when the quiz is completed. Updates the score and shows a toast.
+   *
+   * @param {number} score - The user's quiz score.
+   */
   const onQuizComplete = (score: number) => {
     if (currentQuizId) updateQuizScore(currentQuizId, score);
 
@@ -190,9 +184,13 @@ export function useQuiz() {
     });
   };
 
+  /**
+   * Loads a quiz from history into the current state.
+   *
+   * @param {QuizHistory} historyItem - The quiz history item to load.
+   */
   const loadQuizFromHistory = (historyItem: QuizHistory) => {
     setQuiz(historyItem.quiz);
-    console.log(historyItem);
 
     setCurrentQuizId(historyItem.id);
     toast.success("Quiz loaded", {
