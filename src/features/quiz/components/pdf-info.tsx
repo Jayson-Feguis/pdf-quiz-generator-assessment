@@ -9,19 +9,19 @@ type Props = {
 
 export function PdfInfo({ pageCount, textLength, truncated }: Props) {
   return (
-    <Card className="bg-green-50 border-green-200">
-      <CardContent className="p-4">
-        <div className="flex items-center space-x-4 text-sm text-green-800">
+    <Card className="bg-transparent border-0 shadow-transparent">
+      <CardContent>
+        <div className="flex items-center justify-center space-x-4 text-sm text-purple-300">
           <div className="flex items-center">
-            <Pages className="h-4 w-4 mr-1" />
+            <Pages className="h-4 w-4 mr-1 opacity-40" />
             <span>{pageCount} pages</span>
           </div>
           <div className="flex items-center">
-            <Type className="h-4 w-4 mr-1" />
+            <Type className="h-4 w-4 mr-1 opacity-40" />
             <span>{textLength.toLocaleString()} characters</span>
           </div>
           <div className="flex items-center">
-            <FileText className="h-4 w-4 mr-1" />
+            <FileText className="h-4 w-4 mr-1 opacity-40" />
             <span>Text extracted successfully</span>
           </div>
         </div>

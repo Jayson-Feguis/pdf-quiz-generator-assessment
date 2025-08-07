@@ -90,156 +90,149 @@ export function Quiz({ quiz, onReset, onComplete }: Props) {
     const percentage = Math.round((score / total) * 100);
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
-        {/* Animated background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        </div>
-
-        <div className="relative z-10 max-w-5xl mx-auto pt-12 p-6">
-          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm mb-8">
-            <CardHeader className="text-center pb-8">
-              <div className="flex items-center justify-center mb-6">
-                <div className="relative">
-                  <div
-                    className={cn(
-                      "absolute inset-0 bg-gradient-to-r rounded-full blur-lg opacity-30 animate-pulse",
-                      getScoreGradient(score, total)
-                    )}
-                  ></div>
-                  <Trophy
-                    className={cn(
-                      "relative h-16 w-16",
-                      getScoreColor(score, total)
-                    )}
-                  />
-                </div>
-              </div>
-              <CardTitle className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-                Quiz Complete!
-              </CardTitle>
-              <CardDescription className="text-xl text-gray-600">
-                {quiz.title}
-              </CardDescription>
-              {quiz.metadata && (
-                <div className="mt-6">
-                  <PdfInfo
-                    pageCount={quiz.metadata.pageCount}
-                    textLength={quiz.metadata.textLength}
-                    truncated={quiz.metadata.truncated}
-                  />
-                </div>
-              )}
-            </CardHeader>
-
-            <CardContent>
-              <div className="text-center mb-12">
+      <div className="relative z-10 max-w-5xl mx-auto pt-12 p-6">
+        <Card className="shadow-2xl border-0 bg-zinc-800/95 backdrop-blur-sm mb-8">
+          <CardHeader className="text-center pb-8">
+            <div className="flex items-center justify-center mb-6">
+              <div className="relative">
                 <div
                   className={cn(
-                    "text-8xl font-bold mb-4",
-                    getScoreColor(score, total)
+                    "absolute inset-0 bg-gradient-to-r rounded-full blur-lg opacity-30 animate-pulse",
+                    getScoreGradient(score, total)
                   )}
-                >
-                  {score}/{total}
-                </div>
-                <div
+                ></div>
+                <Trophy
                   className={cn(
-                    "text-3xl font-semibold mb-6",
+                    "relative h-16 w-16",
                     getScoreColor(score, total)
                   )}
-                >
-                  {percentage}% Correct
-                </div>
-                <div className="max-w-md mx-auto">
-                  <Progress value={percentage} className="h-3" />
-                </div>
+                />
               </div>
+            </div>
+            <CardTitle className="text-4xl font-bold bg-gradient-to-r from-zinc-300 to-zinc-200 bg-clip-text text-transparent mb-4">
+              Quiz Complete!
+            </CardTitle>
+            <CardDescription className="text-xl text-zinc-500">
+              {quiz.title}
+            </CardDescription>
+            {quiz.metadata && (
+              <div className="mt-6">
+                <PdfInfo
+                  pageCount={quiz.metadata.pageCount}
+                  textLength={quiz.metadata.textLength}
+                  truncated={quiz.metadata.truncated}
+                />
+              </div>
+            )}
+          </CardHeader>
 
-              <div className="grid gap-6">
-                {quiz.questions.map((question, index) => {
-                  const userAnswer = selectedAnswers[index];
-                  const isCorrect = userAnswer === question.correctAnswer;
+          <CardContent>
+            <div className="text-center mb-12">
+              <div
+                className={cn(
+                  "text-8xl font-bold mb-4",
+                  getScoreColor(score, total)
+                )}
+              >
+                {score}/{total}
+              </div>
+              <div
+                className={cn(
+                  "text-3xl font-semibold mb-6",
+                  getScoreColor(score, total)
+                )}
+              >
+                {percentage}% Correct
+              </div>
+              <div className="max-w-md mx-auto">
+                <Progress value={percentage} className="h-3" />
+              </div>
+            </div>
 
-                  return (
-                    <Card
-                      key={index}
-                      className={cn(
-                        "border-l-4 transition-all duration-200",
-                        isCorrect
-                          ? "border-l-emerald-500 bg-emerald-50/50"
-                          : "border-l-red-500 bg-red-50/50"
-                      )}
-                    >
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg flex-1 pr-4">
-                            <span className="text-purple-600 font-bold mr-2">
-                              Q{index + 1}.
-                            </span>
-                            {question.question}
-                          </CardTitle>
-                          {isCorrect ? (
-                            <CheckCircle className="h-7 w-7 text-emerald-600 flex-shrink-0" />
-                          ) : (
-                            <XCircle className="h-7 w-7 text-red-600 flex-shrink-0" />
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3 mb-6">
-                          {question.options.map((option, optionIndex) => (
-                            <div
-                              key={optionIndex}
-                              className={cn(
-                                "p-4 rounded-lg border-2 transition-all",
-                                optionIndex === question.correctAnswer
-                                  ? "bg-emerald-50 border-emerald-200 text-emerald-800"
-                                  : optionIndex === userAnswer && !isCorrect
-                                  ? "bg-red-50 border-red-200 text-red-800"
-                                  : "bg-gray-50 border-gray-200"
-                              )}
-                            >
+            <div className="grid gap-6">
+              {quiz.questions.map((question, index) => {
+                const userAnswer = selectedAnswers[index];
+                const isCorrect = userAnswer === question.correctAnswer;
+
+                return (
+                  <Card
+                    key={index}
+                    className={cn(
+                      "transition-all duration-200 bg-zinc-900 border-zinc-700"
+                    )}
+                  >
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="text-lg flex-1 pr-4 text-zinc-200">
+                          <span className="text-zinc-500 font-bold mr-2">
+                            Q{index + 1}.
+                          </span>
+                          {question.question}
+                        </CardTitle>
+                        {isCorrect ? (
+                          <CheckCircle className="h-7 w-7 text-emerald-600 flex-shrink-0" />
+                        ) : (
+                          <XCircle className="h-7 w-7 text-red-600 flex-shrink-0" />
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3 mb-6">
+                        {question.options.map((option, optionIndex) => (
+                          <div
+                            key={optionIndex}
+                            className={cn(
+                              "p-4 rounded-lg border-2 transition-all",
+                              optionIndex === question.correctAnswer
+                                ? "bg-emerald-500/50 border-zinc-500 text-emerald-800"
+                                : optionIndex === userAnswer && !isCorrect
+                                ? "bg-red-500/20 border-zinc-500 text-red-800"
+                                : "bg-zinc-900 border-gray-200/50 opacity-20 border-dashed"
+                            )}
+                          >
+                            <div className="flex items-center justify-between">
                               <div className="flex items-center">
-                                {optionIndex === question.correctAnswer && (
-                                  <CheckCircle className="h-5 w-5 text-emerald-600 mr-3" />
-                                )}
-                                {optionIndex === userAnswer && !isCorrect && (
-                                  <XCircle className="h-5 w-5 text-red-600 mr-3" />
-                                )}
-                                <span className="font-semibold text-purple-600 mr-3">
+                                <span className="font-semibold text-zinc-400 mr-3">
                                   {String.fromCharCode(65 + optionIndex)}.
                                 </span>
-                                <span className="font-medium">{option}</span>
+                                <span className="font-medium text-zinc-300">
+                                  {option}
+                                </span>
                               </div>
+                              {optionIndex === question.correctAnswer && (
+                                <CheckCircle className="h-5 w-5 text-emerald-600 mr-3" />
+                              )}
+                              {optionIndex === userAnswer && !isCorrect && (
+                                <XCircle className="h-5 w-5 text-red-600 mr-3" />
+                              )}
                             </div>
-                          ))}
-                        </div>
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                          <p className="text-blue-800">
-                            <span className="font-bold">💡 Explanation:</span>{" "}
-                            {question.explanation}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="bg-gradient-to-r from-zinc-700/50 to-zinc-900 p-4 rounded-lg border border-zinc-900">
+                        <p className="text-zinc-400">
+                          <span className="font-bold">💡 Explanation:</span>{" "}
+                          {question.explanation}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
 
-              <div className="flex justify-center mt-12">
-                <Button
-                  onClick={onReset}
-                  size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-12 px-8"
-                >
-                  <RotateCcw className="h-5 w-5 mr-2" />
-                  Generate New Quiz
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+            <div className="flex justify-center mt-12">
+              <Button
+                onClick={onReset}
+                size="lg"
+                className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 h-12 px-8"
+              >
+                <RotateCcw className="h-5 w-5 mr-2" />
+                Generate New Quiz
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -248,114 +241,102 @@ export function Quiz({ quiz, onReset, onComplete }: Props) {
   const question = quiz.questions[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-indigo-100">
-      {/* Animated background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-      </div>
-
-      <div className="relative z-10 max-w-3xl mx-auto pt-12 p-6">
-        {/* Progress Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              {quiz.title}
-            </h1>
-            <div className="text-right">
-              <div className="text-sm text-gray-600 mb-1">Progress</div>
-              <div className="text-lg font-bold text-purple-600">
-                {currentQuestion + 1} of {quiz.questions.length}
-              </div>
+    <div className="relative z-10 max-w-3xl w-full pt-12 p-6">
+      {/* Progress Header */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-zinc-300 to-zinc-200 bg-clip-text text-transparent">
+            {quiz.title}
+          </h1>
+          <div className="text-right">
+            <div className="text-sm text-zinc-500 mb-1">Progress</div>
+            <div className="text-lg font-bold text-zinc-300">
+              {currentQuestion + 1} of {quiz.questions.length}
             </div>
           </div>
-          <Progress value={progress} className="h-3" />
         </div>
-
-        {/* Question Card */}
-        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-sm">
-          <CardHeader className="pb-6">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
-                {currentQuestion + 1}
-              </div>
-              <CardTitle className="text-2xl text-gray-900 flex-1">
-                {question.question}
-              </CardTitle>
-            </div>
-          </CardHeader>
-
-          <CardContent>
-            <RadioGroup
-              value={selectedAnswer?.toString()}
-              onValueChange={(value) => handleAnswerSelect(parseInt(value))}
-              className="space-y-4"
-            >
-              {question.options.map((option, index) => (
-                <div
-                  key={index}
-                  className={cn(
-                    "group relative overflow-hidden rounded-xl border-2 transition-all duration-200",
-                    selectedAnswer === index
-                      ? "border-purple-300 bg-gradient-to-r from-purple-50 to-indigo-50 shadow-md"
-                      : "border-gray-200 bg-white hover:border-purple-200 hover:bg-purple-50/30"
-                  )}
-                >
-                  <div className="flex items-center space-x-4 p-6">
-                    <RadioGroupItem
-                      value={index.toString()}
-                      id={`option-${index}`}
-                      className="border-2 border-purple-300"
-                    />
-                    <Label
-                      htmlFor={`option-${index}`}
-                      className="flex-1 cursor-pointer font-medium text-gray-900 text-lg"
-                    >
-                      <span className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-bold rounded-full mr-4 text-sm">
-                        {String.fromCharCode(65 + index)}
-                      </span>
-                      {option}
-                    </Label>
-                  </div>
-                </div>
-              ))}
-            </RadioGroup>
-
-            <div className="flex justify-between mt-10">
-              <Button
-                variant="outline"
-                onClick={handlePreviousQuestion}
-                disabled={currentQuestion === 0}
-                className="h-12 px-6"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
-
-              <div className="flex space-x-4">
-                <Button
-                  variant="outline"
-                  onClick={onReset}
-                  className="h-12 px-6"
-                >
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  Start Over
-                </Button>
-                <Button
-                  onClick={handleNextQuestion}
-                  disabled={selectedAnswer === null}
-                  className="h-12 px-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
-                >
-                  {currentQuestion === quiz.questions.length - 1
-                    ? "Finish Quiz"
-                    : "Next Question"}
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Progress value={progress} className="h-3" />
       </div>
+
+      {/* Question Card */}
+      <Card className="shadow-2xl border-0 bg-zinc-800 backdrop-blur-sm">
+        <CardHeader className="pb-6">
+          <div className="flex items-center mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-zinc-500/50 to-zinc-300/50 rounded-full flex items-center justify-center text-white font-bold text-lg mr-4">
+              {currentQuestion + 1}
+            </div>
+            <CardTitle className="text-2xl text-zinc-300 flex-1">
+              {question.question}
+            </CardTitle>
+          </div>
+        </CardHeader>
+
+        <CardContent>
+          <RadioGroup
+            value={selectedAnswer?.toString()}
+            onValueChange={(value) => handleAnswerSelect(parseInt(value))}
+            className="space-y-4"
+          >
+            {question.options.map((option, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "group relative overflow-hidden rounded-xl border-2 transition-all duration-200",
+                  selectedAnswer === index
+                    ? "border-purple-300 bg-gradient-to-r from-zinc-800 to-zinc-700 shadow-md"
+                    : "border-zinc-500 border-2 border-dashed bg-zinc-900 hover:border-zinc-200 hover:bg-zinc-800/30"
+                )}
+              >
+                <div className="flex items-center space-x-4 p-6">
+                  <RadioGroupItem
+                    value={index.toString()}
+                    id={`option-${index}`}
+                    className="border-2 border-purple-300"
+                  />
+                  <Label
+                    htmlFor={`option-${index}`}
+                    className="flex-1 cursor-pointer font-medium text-zinc-300 text-lg"
+                  >
+                    <span className="inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-zinc-500/50 to-zinc-300/50 text-white font-bold rounded-full mr-4 text-sm">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    {option}
+                  </Label>
+                </div>
+              </div>
+            ))}
+          </RadioGroup>
+
+          <div className="flex justify-between mt-10">
+            <Button
+              variant="outline"
+              onClick={handlePreviousQuestion}
+              disabled={currentQuestion === 0}
+              className="h-12 px-6"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Previous
+            </Button>
+
+            <div className="flex space-x-4">
+              <Button variant="outline" onClick={onReset} className="h-12 px-6">
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Start Over
+              </Button>
+              <Button
+                onClick={handleNextQuestion}
+                disabled={selectedAnswer === null}
+                className="h-12 px-8 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700"
+              >
+                {currentQuestion === quiz.questions.length - 1
+                  ? "Finish Quiz"
+                  : "Next Question"}
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
