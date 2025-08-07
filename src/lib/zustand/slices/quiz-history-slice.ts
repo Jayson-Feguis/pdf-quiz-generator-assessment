@@ -17,7 +17,7 @@ const quizHistorySlice: StateCreator<QuizHistorySlice> = (set) => ({
     set((state) => {
       const newHistory = [quizItem, ...state.quizHistory].slice(
         0,
-        MAX_QUIZ_HISTORY_COUNT
+        +MAX_QUIZ_HISTORY_COUNT
       );
       return { quizHistory: newHistory };
     }),

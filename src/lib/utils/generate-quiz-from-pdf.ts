@@ -11,6 +11,32 @@ import {
 } from "@/lib/constants";
 import { QuizSchema } from "@/lib/schemas/quiz.schema";
 
+/**
+ * Generates a multiple-choice quiz from the content of a PDF file using OpenAI.
+ *
+ * Validates the file, extracts text using PDF parsing, chunks the content if needed,
+ * and sends it to the OpenAI API to generate questions. Then, merges and shuffles
+ * the questions into a final quiz object with metadata.
+ *
+ * @param {File} file - The PDF file to process.
+ * @returns {Promise<{
+ *   title: string,
+ *   questions: Array<{
+ *     question: string,
+ *     options: string[],
+ *     correctAnswer: number,
+ *     explanation: string
+ *   }>,
+ *   metadata: {
+ *     pageCount: number,
+ *     textLength: number,
+ *     chunkCount: number,
+ *     questionCount: number
+ *   }
+ * }>} - The generated quiz object with questions and metadata.
+ *
+ * @throws {Error} If the file is missing, invalid, too large, or has insufficient extractable text.
+ */
 export async function generateQuizFromPdf(file: File) {
   if (!file) throw new Error("No PDF file provided");
 
@@ -44,11 +70,11 @@ export async function generateQuizFromPdf(file: File) {
       - ${QUESTIONS_COUNT} questions with 4 options in array (no labels like A, B, etc.)
       - Index of correct answer (0-based)
       - Brief explanation for each answer
+      - Remove duplicate question from previous chats
 
       Text:
       ${chunk}`.trim();
 
-    console.log(OPENAI_MODEL);
     const result = await generateObject({
       model: openai(OPENAI_MODEL),
       messages: [

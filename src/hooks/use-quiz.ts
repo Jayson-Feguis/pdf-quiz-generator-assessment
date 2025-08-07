@@ -163,9 +163,6 @@ export function useQuiz() {
     }
   };
 
-  /**
-   * Resets the quiz state.
-   */
   const resetQuiz = () => {
     setQuiz(null);
     setCurrentQuizId(null);
